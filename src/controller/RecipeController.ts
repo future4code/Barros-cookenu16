@@ -11,7 +11,8 @@ export class RecipeController{
 
             const recipe:recipesDTO = {
                 title,
-                description
+                description,
+                token:req.headers.authorization as string
             }
 
             await this.recipeBusiness.createRecipes(recipe)
@@ -24,10 +25,14 @@ export class RecipeController{
 
     getRecipe = async (req:Request, res:Response)=>{
         try {
-            const {id} = req.params
-            const result = await this.recipeBusiness.getRecipe(id)
+            const info:any = {
+                token : req.headers.authorization as string,
+                id: req.params
+            }
+
+
+            const result = await this.recipeBusiness.getRecipe(info)
             res.status(200).send(result)
-            res.send(id)
 
         } catch (error:any) {
             res.status(400).send(error.message)
