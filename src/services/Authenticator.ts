@@ -9,7 +9,7 @@ export class Authenticator{
         const token =  jwt.sign(
             {id},
             process.env.JWT_KEY as string,
-            {expiresIn:'1h'}
+            {expiresIn:'6h'}
         )
         return token
     }
@@ -20,7 +20,6 @@ export class Authenticator{
            const payload = jwt.verify(token, process.env.JWT_KEY as string) as AuthenticationData
            return payload
        } catch (error:any) {
-        console.log(error.message);
         throw new Error("Nao autorizado.");
         
         

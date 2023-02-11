@@ -1,19 +1,22 @@
+import { recipesDTO } from './../model/Recipes';
 import { IdNotInserted, PleaseInsert, RecipeNotFound } from './../error/errors';
 import { recipes } from '../model/Recipes';
 import { IdGenerator } from '../services/idGenerator';
 import { RecipesDatabase } from './../database/RecipesDatabase';
+import { Authenticator } from '../services/Authenticator';
 export class RecipesBusiness{
     recipesDatabase = new RecipesDatabase()
+    authenticator = new Authenticator()
 
-    createRecipes = async (input:any)=>{
+    createRecipes = async (input:recipesDTO)=>{
         try {
-            const {title, description} = input
+            const {title, description, token} = input
 
             if(!title || !description) throw new PleaseInsert()
 
-            const id = IdGenerator.ID()
+            const { id } = this.authenticator.getTokenData(token)
 
-            const recipe:recipes = {
+            const recipe = {
                 id,
                 title,
                 description
@@ -27,17 +30,23 @@ export class RecipesBusiness{
         }
     }
 
-    getRecipe = async (id:string)=>{
+    getRecipe = async (info:any)=>{
 
         try {
 
-          if(!id) throw new IdNotInserted()
+            const { token, idRecipe } = info
 
-                const recipe = await this.recipesDatabase.getRecipe(id)
+            if(idRecipe) throw new IdNotInserted()
 
-                if(!recipe) throw new RecipeNotFound()
+            const { id } = this.authenticator.getTokenData(token)
 
-                return recipe
+
+
+            const recipe = await this.recipesDatabase.getRecipe(id)
+
+            if(!recipe) throw new RecipeNotFound()
+
+            return recipe
 
         } catch (error:any) {
             throw new Error(error.message);
