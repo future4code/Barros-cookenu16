@@ -42,4 +42,5 @@ export class RecipesDatabase extends BaseDatabase{
             
         }
     }
+
 }

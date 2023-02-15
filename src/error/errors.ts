@@ -32,12 +32,24 @@ export class PasswordWrong extends CustomError{
 
 export class IdNotInserted extends CustomError{
     constructor(){
-        super(404, 'O id não foi inserido.')
+        super(422, 'O id não foi inserido.')
+    }
+}
+
+export class TokenNotInserted extends CustomError{
+    constructor(){
+        super(422, 'O token não foi inserido.')
     }
 }
 
 export class RecipeNotFound extends CustomError{
     constructor(){
-        super(404, 'Receita não encontrada.')
+        super(401, 'Receita não encontrada.')
+    }
+}
+
+export class NotAuthorized extends CustomError{
+    constructor(){
+        super(404, 'Usuário não autorizado..')
     }
 }

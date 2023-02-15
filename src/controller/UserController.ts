@@ -42,21 +42,45 @@ export class UserController{
 
     allUser = async (req:Request, res:Response)=>{
         try {
-            const result = await this.userBusiness.allUser()
+
+            const token = req.headers.authorization as string 
+
+            const result = await this.userBusiness.allUser(token)
             res.status(200).send(result)
         } catch (error:any) {
             res.status(400).send(error.message)
         }
     }
-
+ 
     getUserById = async (req:Request, res:Response)=>{
         try {
             const {id} = req.params
+            const token = req.headers.authorization as string
 
-            const result = await this.userBusiness.getUserById(id)
+            const data :any = {
+                id, 
+                token
+            }
+
+            const result = await this.userBusiness.getUserById(data)
             res.status(200).send(result)
         } catch (error:any) {
             res.status(400).send(error.message)
         }
     }
+
+    getProfile = async (req:Request, res:Response)=>{
+        try {
+            const inToken = req.headers.authorization as string
+            console.log(inToken);
+            
+            const result = await this.userBusiness.getProfile(inToken)
+
+            res.status(200).send(result)
+
+        } catch (error:any) {
+            res.status(400).send(error.message)
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-import { User, loginDTO } from './../model/Users';
+import { User, loginDTO, AuthenticationData } from './../model/Users';
 import { BaseDatabase } from "./BaseDatabase";
 
 export class UserDatabase extends BaseDatabase {
@@ -39,14 +39,6 @@ export class UserDatabase extends BaseDatabase {
         }
     }
 
-    getProfile = async ()=>{
-        try {
-            
-        } catch (error:any) {
-            throw new Error(error.message)
-        }
-    }
-
     getUserById = async (id:any)=>{
         try {
             const result = await UserDatabase.connection
@@ -59,4 +51,20 @@ export class UserDatabase extends BaseDatabase {
             throw new Error(error.message)
         }
     }
+
+    getProfile = async (token:AuthenticationData)=>{
+        try {
+            
+            const result = await UserDatabase.connection
+                .select('name', 'email')
+                .from(this.TABLE_NAME)
+                .where({id:token.id})
+            
+            return result[0]
+
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
 }
