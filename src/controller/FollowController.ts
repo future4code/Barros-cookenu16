@@ -7,13 +7,14 @@ export class FollowController{
     followUser = async (req:Request, res:Response)=>{
         try {
             const {idUser, idFollow} = req.body
+            const inToken = req.headers.authorization as string
 
             const input:any = {
                 idUser,
                 idFollow
             }
 
-            const result = await this.followBusiness.followUser(input)
+            const result = await this.followBusiness.followUser(input, inToken)
             res.status(200).send({
                 message:`Seguindo o usuario ${result[0].name} com sucesso.`, 
                 result

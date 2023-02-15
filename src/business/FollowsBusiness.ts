@@ -1,13 +1,18 @@
+import { Authenticator } from './../services/Authenticator';
 import { FollowsDatabase } from './../database/FollowsDatabase';
-import { PleaseInsert, UserNotFound } from './../error/errors';
+import { PleaseInsert, UserNotFound, TokenNotInserted, NotAuthorized } from './../error/errors';
 import { IdGenerator } from "../services/idGenerator";
-import { log, table } from 'console';
 
 export class FollowsBusiness{
     followDatabase = new FollowsDatabase()
+    authenticator = new Authenticator()
 
-    followUser = async (input:any)=>{
+    followUser = async (input:any, inToken: string)=>{
        try {
+
+        const token = this.authenticator.getTokenData(inToken)
+        if(!token) throw new NotAuthorized()
+
         const {idUser, idFollow} = input;
 
         if(!idUser || !idFollow) throw new PleaseInsert();
