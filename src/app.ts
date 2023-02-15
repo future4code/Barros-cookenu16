@@ -2,6 +2,7 @@ import express from "express"
 import cors from 'cors'
 import { userRouter } from './routes/UserRouter';
 import { recipesRouter } from "./routes/RecipesRouter";
+import { followRouter } from "./routes/FollowRouter";
 
 export const app = express()
 
@@ -10,6 +11,7 @@ app.use(cors())
 
 app.use('/users',userRouter)
 app.use('/recipes',recipesRouter)
+app.use('/follows', followRouter)
 
 
 
