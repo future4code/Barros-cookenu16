@@ -1,5 +1,5 @@
 import { recipesDTO } from './../model/Recipes';
-import { IdNotInserted, PleaseInsert, RecipeNotFound } from './../error/errors';
+import { IdNotInserted, PleaseInsert, RecipeNotFound, NotAuthorized } from './../error/errors';
 import { recipes } from '../model/Recipes';
 import { IdGenerator } from '../services/idGenerator';
 import { RecipesDatabase } from './../database/RecipesDatabase';
@@ -8,8 +8,11 @@ export class RecipesBusiness{
     recipesDatabase = new RecipesDatabase()
     authenticator = new Authenticator()
 
-    createRecipes = async (input:recipesDTO)=>{
+    createRecipes = async (input:recipesDTO, inToken:string)=>{
         try {
+            const headersToken = this.authenticator.getTokenData(inToken)
+            if(!headersToken) throw new  NotAuthorized()  
+
             const {title, description, token} = input
 
             if(!title || !description) throw new PleaseInsert()
