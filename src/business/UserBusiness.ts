@@ -1,8 +1,10 @@
-import { PasswordInvalid, PleaseInsert, EmailInvalid, PasswordWrong, UserNotFound } from '../error/errors';
-import { inputDTO, User, loginDTO} from './../model/Users';
+import { TokenNotInserted } from './../error/errors';
+import { PasswordInvalid, PleaseInsert, EmailInvalid, PasswordWrong, UserNotFound, NotAuthorized} from '../error/errors';
+import { inputDTO, User, loginDTO, AuthenticationData} from './../model/Users';
 import { UserDatabase } from "../database/UserDatabase";
 import { IdGenerator } from "../services/idGenerator";
 import { Authenticator } from '../services/Authenticator';
+import { info } from 'console';
 
 export class UserBusines{
     userDatabase = new UserDatabase()
@@ -58,8 +60,13 @@ export class UserBusines{
         }
     }
 
-    allUser = async ()=>{
+    allUser = async (inToken:string)=>{
         try {
+            
+            const token = this.authenticator.getTokenData(inToken)
+
+            if(!token) throw new NotAuthorized()
+
             const result = await this.userDatabase.allUser()
             return result
         } catch (error:any) {
@@ -67,9 +74,13 @@ export class UserBusines{
         }
     }
 
-    getUserById = async (id:any)=>{
+    getUserById = async (data:any)=>{
         try {
+            const {id, inToken} = data
             if(id) throw new Error("o ID nao foi inserido");
+             const token = this.authenticator.getTokenData(inToken)
+
+             if(!token) throw new NotAuthorized()
             
             const result = await this.userDatabase.getUserById(id)
             return result
@@ -77,4 +88,21 @@ export class UserBusines{
             throw new Error(error.message)
         }
     }
-}
+
+    getProfile = async (inToken:string)=>{
+        try {
+            if(!inToken) throw new TokenNotInserted()
+            const token = this.authenticator.getTokenData(inToken)
+            
+
+            if(!token) throw new NotAuthorized()
+
+            const result  = await this.userDatabase.getProfile(token)
+            return result
+
+        } catch (error:any) {
+            throw new Error(error.message);
+        }
+    }
+
+} 
