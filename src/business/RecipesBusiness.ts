@@ -1,33 +1,39 @@
-import { recipesDTO } from './../model/Recipes';
-import { IdNotInserted, PleaseInsert, RecipeNotFound, NotAuthorized } from './../error/errors';
-import { recipes } from '../model/Recipes';
-import { IdGenerator } from '../services/idGenerator';
+import { VerifyUser } from './../services/verifyUser';
+import { recipes, recipesDTO } from './../model/Recipes';
+import { IdNotInserted, PleaseInsert, RecipeNotFound, NotAuthorized, UserNotFound } from './../error/errors';
 import { RecipesDatabase } from './../database/RecipesDatabase';
 import { Authenticator } from '../services/Authenticator';
+import { IdGenerator } from '../services/idGenerator';
+
 export class RecipesBusiness{
     recipesDatabase = new RecipesDatabase()
     authenticator = new Authenticator()
+    verifyUser = new VerifyUser()
 
-    createRecipes = async (input:recipesDTO, inToken:string)=>{
+    createRecipes = async (input:recipesDTO, token:string)=>{
         try {
-            const headersToken = this.authenticator.getTokenData(inToken)
+            const {id, title, description} = input
+            
+            const headersToken = this.authenticator.getTokenData(token)
             if(!headersToken) throw new  NotAuthorized()  
 
-            const {title, description, token} = input
-
             if(!title || !description) throw new PleaseInsert()
+            
+            const verify = await this.verifyUser.VerifyUserByID(id)
+            if(verify.length !== 1) throw new UserNotFound 
 
-            const { id } = this.authenticator.getTokenData(token)
-
-            const recipe = {
-                id,
+            const idRecipe = IdGenerator.ID()
+            
+            const recipe : recipes = {
+                id:idRecipe,
                 title,
-                description
+                description,
+                userName: verify[0].name,
+                userId: verify[0].id
             }
-
-            await this.recipesDatabase.createRecipes(recipe)
-           
-
+            
+         await this.recipesDatabase.createRecipes(recipe)
+            
         } catch (error:any) {
             throw new Error(error.message);
         }
@@ -56,7 +62,6 @@ export class RecipesBusiness{
         }
     }
 
-    
     allRecipes = async ()=>{
         try {
             const result = await this.recipesDatabase.allRecipes()
