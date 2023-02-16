@@ -8,14 +8,16 @@ export class RecipeController{
     createRecipes = async (req:Request, res:Response)=>{
         try {
             const {title, description} = req.body
+            const token = req.headers.authorization as string
+            const id = req.params.idUser
 
-            const recipe:recipesDTO = {
+            const recipe = {
+                id ,
                 title,
                 description,
-                token:req.headers.authorization as string
             }
 
-            await this.recipeBusiness.createRecipes(recipe)
+            await this.recipeBusiness.createRecipes(recipe, token)
             res.status(201).send({message:'Receita foi criada com sucesso.'})
 
         } catch (error:any) {
