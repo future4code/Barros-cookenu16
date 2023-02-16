@@ -62,8 +62,11 @@ export class RecipesBusiness{
         }
     }
 
-    allRecipes = async ()=>{
+    allRecipes = async (token:string)=>{
         try {
+            const verifyToken = this.authenticator.getTokenData(token)
+            if(!verifyToken) throw new NotAuthorized()
+
             const result = await this.recipesDatabase.allRecipes()
             return result
         } catch (error:any) {

@@ -43,7 +43,9 @@ export class RecipeController{
 
     allRecipes = async (req:Request, res:Response)=>{
         try {
-            const result = await this.recipeBusiness.allRecipes()
+            const token = req.headers.authorization as string
+            
+            const result = await this.recipeBusiness.allRecipes(token)
             
             res.status(200).send(result)
 

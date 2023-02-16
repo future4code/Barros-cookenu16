@@ -1,4 +1,4 @@
-import { app } from "./app";
-import { userRouter } from './routes/UserRouter';
+// import { app } from "./app";
+// import { userRouter } from './routes/UserRouter';
 
-app.use('/users',userRouter)
+// app.use('/users',userRouter)
