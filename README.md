@@ -19,5 +19,12 @@
   - UUID
   - Autenticação e autorização
  
+ ## Rodando localmente:
  
+ - Criando tabelas no mysql.
+ - Users: id, name, email, password
+ - Recipes: id, tittle, description, date, userName, userId
+ - Follows : id, idUser, idFollow
+ - Execute o comando *NPM INSTALL*
+ - Configurar/criar o dotenv para conexão com o banco de dados
  
