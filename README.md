@@ -1,7 +1,5 @@
 # Cookenu
 
-## Links...
-
 ### Link da documentação: 
   [POSTMAN](https://documenter.getpostman.com/view/22376313/2s93CExwbc)
 
