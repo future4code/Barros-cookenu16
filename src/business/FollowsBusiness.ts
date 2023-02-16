@@ -1,6 +1,6 @@
 import { Authenticator } from './../services/Authenticator';
 import { FollowsDatabase } from './../database/FollowsDatabase';
-import { PleaseInsert, UserNotFound, TokenNotInserted, NotAuthorized } from './../error/errors';
+import { PleaseInsert, UserNotFound, NotAuthorized } from './../error/errors';
 import { IdGenerator } from "../services/idGenerator";
 
 export class FollowsBusiness{

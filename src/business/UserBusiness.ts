@@ -1,10 +1,9 @@
 import { TokenNotInserted } from './../error/errors';
 import { PasswordInvalid, PleaseInsert, EmailInvalid, PasswordWrong, UserNotFound, NotAuthorized} from '../error/errors';
-import { inputDTO, User, loginDTO, AuthenticationData} from './../model/Users';
+import { inputDTO, User, loginDTO} from './../model/Users';
 import { UserDatabase } from "../database/UserDatabase";
 import { IdGenerator } from "../services/idGenerator";
 import { Authenticator } from '../services/Authenticator';
-import { info } from 'console';
 
 export class UserBusines{
     userDatabase = new UserDatabase()
